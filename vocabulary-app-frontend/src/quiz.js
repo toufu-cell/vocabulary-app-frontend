@@ -49,25 +49,65 @@ const Quiz = () => {
     const currentWord = words[currentIndex];
 
     return (
-        <div style={{ textAlign: "center", marginTop: "50px" }}>
-            <h2>単語クイズ</h2>
-            <div style={{ margin: "20px" }}>
-                <p style={{ fontSize: "24px" }}>単語: {currentWord.word}</p>
+        <div className="quiz-container">
+            <h2 style={{
+                color: '#2c3e50',
+                fontSize: '28px',
+                marginBottom: '30px'
+            }}>単語クイズ</h2>
+
+            <div className="progress-bar">
+                <div
+                    className="progress"
+                    style={{ width: `${(currentIndex / words.length) * 100}%` }}
+                />
+            </div>
+
+            <div className="word-card">
+                <p style={{
+                    fontSize: '32px',
+                    fontWeight: 'bold',
+                    color: '#34495e'
+                }}>{currentWord.word}</p>
+
                 {showMeaning ? (
-                    <div>
-                        <p style={{ fontSize: "20px" }}>意味: {currentWord.meaning}</p>
+                    <div style={{
+                        fontSize: '24px',
+                        color: '#7f8c8d',
+                        marginTop: '20px'
+                    }}>
+                        <p>{currentWord.meaning}</p>
+                        <div style={{ marginTop: '20px' }}>
+                            <button
+                                className="button correct"
+                                onClick={() => handleAnswer(true)}
+                            >
+                                覚えている
+                            </button>
+                            <button
+                                className="button incorrect"
+                                onClick={() => handleAnswer(false)}
+                            >
+                                忘れていた
+                            </button>
+                        </div>
                     </div>
                 ) : (
-                    <button onClick={() => setShowMeaning(true)}>意味を見る</button>
+                    <button
+                        className="button"
+                        onClick={() => setShowMeaning(true)}
+                    >
+                        意味を確認する
+                    </button>
                 )}
             </div>
-            {showMeaning && (
-                <div>
-                    <button onClick={() => handleAnswer(true)}>正解</button>
-                    <button onClick={() => handleAnswer(false)}>不正解</button>
-                </div>
-            )}
-            <p>{currentIndex + 1} / {words.length}</p>
+
+            <p style={{
+                fontSize: '18px',
+                color: '#95a5a6'
+            }}>
+                進捗: {currentIndex + 1} / {words.length}
+            </p>
         </div>
     );
 };
