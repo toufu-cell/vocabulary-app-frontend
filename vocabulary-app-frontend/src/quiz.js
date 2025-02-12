@@ -6,6 +6,7 @@ const Quiz = () => {
     const [words, setWords] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [showMeaning, setShowMeaning] = useState(false);
+    const [confidence, setConfidence] = useState(0);
 
     // コンポーネントマウント時にサーバーから単語を取得
     useEffect(() => {
@@ -25,18 +26,21 @@ const Quiz = () => {
     };
 
     // ユーザーの回答（正解／不正解）をサーバーに送信し、次の単語へ進む処理
-    const handleAnswer = async (correct) => {
+    const handleAnswer = async (correct, confidence) => {
         if (words.length === 0) return;
         const currentWord = words[currentIndex];
         try {
-            await axios.post(`http://localhost:3001/api/words/${currentWord.id}/update`, { correct });
-            // 次の単語へ進む
+            await axios.post(`http://localhost:3001/api/words/${currentWord.id}/update`, {
+                correct,
+                confidence
+            });
             const nextIndex = currentIndex + 1;
             if (nextIndex < words.length) {
                 setCurrentIndex(nextIndex);
                 setShowMeaning(false);
+                setConfidence(0);
             } else {
-                alert("クイズ終了！新しい単語を取得します。");
+                alert("学習セッション終了！新しい単語を取得します。");
                 fetchWords();
             }
         } catch (error) {
@@ -69,6 +73,13 @@ const Quiz = () => {
                     fontWeight: 'bold',
                     color: '#34495e'
                 }}>{currentWord.word}</p>
+                <p style={{
+                    fontSize: '14px',
+                    color: '#95a5a6',
+                    marginTop: '5px'
+                }}>
+                    学習回数: {currentWord.totalReviews || 0}回目
+                </p>
 
                 {showMeaning ? (
                     <div style={{
@@ -80,13 +91,13 @@ const Quiz = () => {
                         <div style={{ marginTop: '20px' }}>
                             <button
                                 className="button correct"
-                                onClick={() => handleAnswer(true)}
+                                onClick={() => handleAnswer(true, confidence)}
                             >
                                 覚えている
                             </button>
                             <button
                                 className="button incorrect"
-                                onClick={() => handleAnswer(false)}
+                                onClick={() => handleAnswer(false, confidence)}
                             >
                                 忘れていた
                             </button>
