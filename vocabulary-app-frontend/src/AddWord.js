@@ -6,6 +6,9 @@ const AddWord = ({ onWordAdded }) => {
     const [word, setWord] = useState('');
     const [meaning, setMeaning] = useState('');
     const [message, setMessage] = useState('');
+    const [loading, setLoading] = useState(false);
+
+    const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -13,8 +16,10 @@ const AddWord = ({ onWordAdded }) => {
             setMessage("単語と意味の両方を入力してください");
             return;
         }
+        
+        setLoading(true);
         try {
-            const res = await axios.post('http://localhost:3001/api/words', { word, meaning });
+            const res = await axios.post(`${apiUrl}/api/words`, { word, meaning });
             setMessage(`単語 "${res.data.word}" を追加しました`);
             setWord('');
             setMeaning('');
@@ -28,54 +33,52 @@ const AddWord = ({ onWordAdded }) => {
                 console.error("単語の追加に失敗しました", error);
                 setMessage("単語の追加に失敗しました");
             }
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
         <div className="quiz-container">
-            <h2 style={{ color: '#2c3e50', marginBottom: '20px' }}>単語の追加</h2>
-            <form onSubmit={handleSubmit}>
-                <div style={{ marginBottom: '15px' }}>
+            <h2 className="form-title">単語の追加</h2>
+            <form onSubmit={handleSubmit} className="add-word-form">
+                <div className="form-group">
+                    <label htmlFor="word-input">新しい単語</label>
                     <input
+                        id="word-input"
                         type="text"
                         value={word}
                         onChange={(e) => setWord(e.target.value)}
                         placeholder="新しい単語を入力"
-                        style={{
-                            width: '100%',
-                            padding: '10px',
-                            borderRadius: '5px',
-                            border: '1px solid #ddd',
-                            marginBottom: '10px'
-                        }}
+                        disabled={loading}
                     />
+                </div>
+                
+                <div className="form-group">
+                    <label htmlFor="meaning-input">意味</label>
                     <input
+                        id="meaning-input"
                         type="text"
                         value={meaning}
                         onChange={(e) => setMeaning(e.target.value)}
                         placeholder="意味を入力"
-                        style={{
-                            width: '100%',
-                            padding: '10px',
-                            borderRadius: '5px',
-                            border: '1px solid #ddd'
-                        }}
+                        disabled={loading}
                     />
                 </div>
+                
                 <button
                     type="submit"
-                    className="button"
+                    className="button add-button"
+                    disabled={loading}
                 >
-                    追加する
+                    {loading ? '追加中...' : '追加する'}
                 </button>
             </form>
+            
             {message && (
-                <p style={{
-                    marginTop: '15px',
-                    color: message.includes('失敗') ? '#e74c3c' : '#27ae60'
-                }}>
+                <div className={`message ${message.includes('エラー') ? 'error' : 'success'}`}>
                     {message}
-                </p>
+                </div>
             )}
         </div>
     );
