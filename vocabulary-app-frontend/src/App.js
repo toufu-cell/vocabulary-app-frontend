@@ -38,7 +38,6 @@ function App() {
   };
 
   const handleWordAdded = (newWord) => {
-    console.log("新しい単語が追加されました:", newWord);
     // 単語追加後に学習タブに切り替える
     setActiveTab('quiz');
   };

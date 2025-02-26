@@ -47,7 +47,6 @@ const Quiz = () => {
     const handleConfidenceChange = (e) => {
         // 明示的に数値に変換して状態を更新
         const newValue = parseFloat(e.target.value);
-        console.log("スライダー値が変更されました:", newValue); // デバッグ用
         setConfidence(newValue);
     };
 
