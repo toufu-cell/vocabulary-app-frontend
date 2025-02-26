@@ -1,0 +1,203 @@
+.confidence-container {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.confidence-label {
+    font-size: 16px;
+    color: var(--text-color);
+    margin-bottom: 10px;
+}
+
+.confidence-slider-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 10px 0;
+}
+
+.confidence-slider-container span {
+    font-size: 12px;
+    color: var(--review-count-color);
+    width: 80px;
+}
+
+.confidence-slider {
+    flex-grow: 1;
+    height: 8px;
+    -webkit-appearance: none;
+    appearance: none;
+    background: linear-gradient(to right, #ff6b6b, #feca57, #1dd1a1);
+    border-radius: 4px;
+    outline: none;
+    margin: 0 15px;
+}
+
+.confidence-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--button-primary);
+    cursor: pointer;
+    border: 2px solid white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.confidence-slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--button-primary);
+    cursor: pointer;
+    border: 2px solid white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.confidence-value {
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 10px;
+    color: var(--button-primary);
+}
+
+.completion-message {
+    font-size: 18px;
+    color: var(--text-color);
+    text-align: center;
+    margin: 20px 0;
+}
+
+.next-review-info {
+    font-size: 16px;
+    color: var(--meaning-text-color);
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.button.refresh {
+    background-color: var(--button-primary);
+    display: block;
+    margin: 0 auto;
+}
+
+/* スライダーのモバイル対応強化 */
+@media (max-width: 768px) {
+    .confidence-container {
+        margin: 15px 0;
+    }
+
+    .confidence-label {
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+    }
+
+    .confidence-slider-container {
+        padding: 0 5px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .confidence-slider {
+        height: 12px;
+        flex: 1;
+        -webkit-appearance: none;
+        appearance: none;
+        background: linear-gradient(to right, #ff6b6b, #feca57, #1dd1a1);
+        border-radius: 10px;
+        outline: none;
+        margin: 0 10px;
+    }
+
+    .confidence-slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 28px;
+        height: 28px;
+        background: var(--button-primary);
+        border-radius: 50%;
+        cursor: pointer;
+        border: 2px solid white;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .confidence-slider::-moz-range-thumb {
+        width: 28px;
+        height: 28px;
+        background: var(--button-primary);
+        border-radius: 50%;
+        cursor: pointer;
+        border: 2px solid white;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .confidence-min,
+    .confidence-max {
+        font-size: 0.8rem;
+        white-space: nowrap;
+        width: auto;
+        max-width: 70px;
+    }
+
+    .confidence-value {
+        font-size: 1.3rem;
+        margin-top: 12px;
+        font-weight: bold;
+    }
+}
+
+/* さらに小さい画面向け */
+@media (max-width: 480px) {
+    .quiz-container {
+        padding: 12px;
+    }
+
+    .word-display {
+        font-size: 1.4rem;
+        margin: 15px 0;
+    }
+
+    .meaning-display {
+        font-size: 1.1rem;
+        margin-bottom: 15px;
+    }
+
+    .button {
+        padding: 10px 15px;
+        font-size: 0.9rem;
+    }
+
+    .confidence-slider-container {
+        margin: 10px 0;
+    }
+
+    /* スライダーのラベルを縮小 */
+    .confidence-min,
+    .confidence-max {
+        font-size: 0.7rem;
+        max-width: 60px;
+    }
+
+    /* スライダーのつまみを大きく */
+    .confidence-slider::-webkit-slider-thumb {
+        width: 30px;
+        height: 30px;
+    }
+
+    .confidence-slider::-moz-range-thumb {
+        width: 30px;
+        height: 30px;
+    }
+}
+
+/* 既存のスタイルに追加 */
+
+/* スライダーのラベルを明確に */
+.confidence-min,
+.confidence-max {
+    font-size: 0.9rem;
+    color: var(--text-color);
+}

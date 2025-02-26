@@ -141,18 +141,140 @@ input[type="text"]:focus {
 }
 
 /* レスポンシブデザイン */
-@media (max-width: 600px) {
+@media (max-width: 768px) {
+  .App {
+    max-width: 100%;
+    padding: 0;
+  }
+
+  .content-container {
+    padding: 15px;
+  }
+
   .navbar {
-    flex-direction: column;
-    gap: 10px;
+    padding: 10px;
+  }
+
+  .app-title {
+    font-size: 1.2rem;
   }
 
   .quiz-container {
-    padding: 20px;
+    padding: 15px;
+    margin: 10px 0;
   }
 
   .word-card {
     padding: 20px;
+  }
+
+  .word-text {
+    font-size: 24px;
+  }
+
+  .meaning-text {
+    font-size: 18px;
+  }
+
+  .button {
+    padding: 10px 15px;
+    font-size: 0.9rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-title {
+    font-size: 1.5rem;
+  }
+
+  .word-display {
+    font-size: 1.8rem;
+  }
+
+  .meaning-display {
+    font-size: 1.4rem;
+  }
+
+  .form-group label {
+    font-size: 0.9rem;
+  }
+
+  .form-group input {
+    padding: 10px;
+    font-size: 1rem;
+  }
+
+  /* タッチ操作の改善 */
+  .button,
+  .action-button,
+  input[type="range"],
+  input[type="checkbox"],
+  input[type="radio"] {
+    min-height: 44px;
+    /* タッチターゲットの最小サイズ */
+  }
+
+  /* スライダーのタッチ対応 */
+  .confidence-slider::-webkit-slider-thumb {
+    width: 24px;
+    height: 24px;
+  }
+
+  /* ダッシュボードのカード */
+  .stat-card {
+    margin-bottom: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar {
+    flex-direction: column;
+    padding: 10px 5px;
+  }
+
+  .nav-links {
+    width: 100%;
+    justify-content: space-around;
+  }
+
+  .nav-link {
+    padding: 6px 10px;
+    font-size: 0.9rem;
+  }
+
+  .word-text {
+    font-size: 20px;
+  }
+
+  .meaning-text {
+    font-size: 16px;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .answer-buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .answer-buttons .button {
+    width: 100%;
+  }
+
+  .logo {
+    font-size: 1.2rem;
+  }
+
+  .word-display {
+    font-size: 1.5rem;
+  }
+
+  .meaning-display {
+    font-size: 1.2rem;
   }
 }
 

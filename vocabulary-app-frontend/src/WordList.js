@@ -54,47 +54,45 @@ const WordList = () => {
     if (words.length === 0) return <div className="word-list-container empty">登録されている単語はありません</div>;
 
     return (
-        <div className="word-list-container">
-            <h2 className="list-title">単語一覧</h2>
-
-            {message && (
-                <div className={`message ${message.includes('エラー') ? 'error' : 'success'}`}>
-                    {message}
+        <div className="quiz-container">
+            <h2 className="form-title">単語一覧</h2>
+            {loading ? (
+                <p>読み込み中...</p>
+            ) : error ? (
+                <p className="error-message">{error}</p>
+            ) : (
+                <div className="table-responsive">
+                    <table className="word-list-table">
+                        <thead>
+                            <tr className="word-list-header">
+                                <th>単語</th>
+                                <th>意味</th>
+                                <th>レベル</th>
+                                <th>学習回数</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {words.map((word) => (
+                                <tr key={word.id} className="word-list-row">
+                                    <td className="word-column">{word.word}</td>
+                                    <td className="meaning-column">{word.meaning}</td>
+                                    <td className="level-column">{word.level || 0}</td>
+                                    <td className="reviews-column">{word.totalReviews || 0}</td>
+                                    <td className="actions-column">
+                                        <button
+                                            onClick={() => handleDelete(word.id, word.word)}
+                                            className="action-button delete"
+                                        >
+                                            削除
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
                 </div>
             )}
-
-            <div className="word-list">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>単語</th>
-                            <th>意味</th>
-                            <th>レベル</th>
-                            <th>学習回数</th>
-                            <th>操作</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {words.map(word => (
-                            <tr key={word.id}>
-                                <td>{word.word}</td>
-                                <td>{word.meaning}</td>
-                                <td>{word.level}</td>
-                                <td>{word.totalReviews || 0}</td>
-                                <td>
-                                    <button
-                                        className="delete-button"
-                                        onClick={() => handleDelete(word.id, word.word)}
-                                        disabled={loading}
-                                    >
-                                        削除
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
         </div>
     );
 };
