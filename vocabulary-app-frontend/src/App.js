@@ -1,19 +1,32 @@
 // App.js
-import React from 'react';
+import React, { useState } from 'react';
 import Quiz from './quiz';
 import AddWord from './AddWord';
+import WordList from './WordList';
+import Navbar from './Navbar';
+import './App.css';
 
 function App() {
-  // onWordAdded を利用してクイズコンポーネントの再読み込みなどの処理を行うことも可能です
+  const [activeTab, setActiveTab] = useState('quiz');
+
   const handleWordAdded = (newWord) => {
-    // ここで新しい単語をクイズリストに反映させるために何らかの処理を行うことができます
     console.log("新しい単語が追加されました:", newWord);
+    // 単語追加後に学習タブに切り替える
+    setActiveTab('quiz');
   };
 
   return (
     <div className="App">
-      <Quiz />
-      <AddWord onWordAdded={handleWordAdded} />
+      <Navbar activeTab={activeTab} setActiveTab={setActiveTab} />
+      <div className="content-container">
+        {activeTab === 'quiz' ? (
+          <Quiz />
+        ) : activeTab === 'add' ? (
+          <AddWord onWordAdded={handleWordAdded} />
+        ) : (
+          <WordList />
+        )}
+      </div>
     </div>
   );
 }
