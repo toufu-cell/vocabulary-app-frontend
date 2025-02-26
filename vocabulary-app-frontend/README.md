@@ -1,70 +1,69 @@
-# Getting Started with Create React App
+# 単語学習アプリ フロントエンド
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 概要
 
-## Available Scripts
+このプロジェクトは単語学習アプリのフロントエンドを提供します。間隔反復学習法を活用した効率的な語彙学習をサポートするUIを実装しています。
 
-In the project directory, you can run:
+## 機能
 
-### `npm start`
+- 単語カードによる学習インターフェース
+- 自己評価に基づく学習進捗の記録
+- 単語の追加・管理
+- 学習統計ダッシュボード
+- データのインポート/エクスポート
+- ダークモード対応
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## 技術スタック
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- React
+- Axios (APIリクエスト)
+- CSS (レスポンシブデザイン)
 
-### `npm test`
+## インストールと実行
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```bash
+##依存関係のインストール
+npm install
+##開発サーバーの起動
+npm start
+```
 
-### `npm run build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 環境変数
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+`.env`ファイルを作成して以下の変数を設定できます：
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```bash
+REACT_APP_API_URL=http://localhost:3001
+```
 
-### `npm run eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## 主要コンポーネント
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- `Quiz.js` - 単語学習インターフェース
+- `AddWord.js` - 単語追加フォーム
+- `WordList.js` - 単語一覧と管理
+- `Dashboard.js` - 学習統計ダッシュボード
+- `DataManagement.js` - データのインポート/エクスポート
+- `Navbar.js` - ナビゲーションメニュー
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## モバイル対応
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+このアプリはレスポンシブデザインを採用しており、スマートフォンやタブレットでも快適に利用できます。
 
-## Learn More
+## ビルドと本番デプロイ
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```bash
+npm run build
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
 
-### Code Splitting
+## 開発ガイドライン
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+- コンポーネントは機能ごとに分割
+- CSSはコンポーネントごとに分離
+- ダークモードはDarkMode.cssで一元管理
 
-### Analyzing the Bundle Size
+## バックエンドとの連携
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+このフロントエンドはバックエンドAPIと連携して動作します。バックエンドの起動方法については、バックエンドのREADMEを参照してください。
