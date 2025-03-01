@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './DataManagement.css';
 
@@ -9,6 +9,34 @@ const DataManagement = () => {
     const [importStatus, setImportStatus] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [stats, setStats] = useState({
+        totalWords: 0,
+        reviewsDue: 0,
+        retentionRate: 0,
+        nextReviewDate: null
+    });
+
+    // コンポーネントマウント時に統計情報を取得
+    useEffect(() => {
+        fetchStats();
+    }, []);
+
+    // 統計情報を取得する関数
+    const fetchStats = async () => {
+        try {
+            const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:3001';
+            const res = await axios.get(`${apiUrl}/api/stats`);
+            setStats({
+                totalWords: res.data.totalWords,
+                reviewsDue: res.data.reviewsDue,
+                retentionRate: res.data.retentionRate,
+                nextReviewDate: new Date(res.data.nextReviewDate).toLocaleDateString('ja-JP')
+            });
+        } catch (error) {
+            console.error("統計情報の取得に失敗しました", error);
+            setError("統計情報の取得に失敗しました。");
+        }
+    };
 
     const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
@@ -96,6 +124,28 @@ const DataManagement = () => {
         <div className="data-management-container">
             <h2 className="form-title">データ管理</h2>
 
+            <div className="stats-section">
+                <h3>学習統計</h3>
+                <div className="stats-grid">
+                    <div className="stat-box">
+                        <div className="stat-value">{stats.totalWords}</div>
+                        <div className="stat-label">総単語数</div>
+                    </div>
+                    <div className="stat-box">
+                        <div className="stat-value">{stats.reviewsDue}</div>
+                        <div className="stat-label">復習予定</div>
+                    </div>
+                    <div className="stat-box">
+                        <div className="stat-value">{stats.retentionRate}%</div>
+                        <div className="stat-label">定着率</div>
+                    </div>
+                    <div className="stat-box">
+                        <div className="stat-value">{stats.nextReviewDate}</div>
+                        <div className="stat-label">次回復習日</div>
+                    </div>
+                </div>
+            </div>
+
             <div className="data-section">
                 <h3>データのエクスポート</h3>
                 <p>現在の単語データをJSONファイルとしてダウンロードします。</p>
@@ -177,4 +227,4 @@ const DataManagement = () => {
     );
 };
 
-export default DataManagement; 
+export default DataManagement;

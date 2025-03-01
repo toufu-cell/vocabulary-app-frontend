@@ -1,4 +1,3 @@
-// Quiz.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './Quiz.css';
@@ -7,24 +6,23 @@ const Quiz = () => {
     const [words, setWords] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [showMeaning, setShowMeaning] = useState(false);
-    const [confidence, setConfidence] = useState(0.5); // デフォルト値を0.5に設定
+    const [confidence, setConfidence] = useState(0.5);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [studyComplete, setStudyComplete] = useState(false);
     const [nextReviewInfo, setNextReviewInfo] = useState('');
+    const [retentionRate, setRetentionRate] = useState(0);
 
-    // コンポーネントマウント時にサーバーから単語を取得
     useEffect(() => {
         fetchWords();
     }, []);
 
-    // サーバーから学習対象の単語を取得する関数
     const fetchWords = async () => {
         try {
             setLoading(true);
             const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:3001';
             const res = await axios.get(`${apiUrl}/api/study`);
-            setWords(res.data);
+            setWords(res.data.words);
             setCurrentIndex(0);
             setShowMeaning(false);
             setStudyComplete(false);
@@ -38,56 +36,122 @@ const Quiz = () => {
         }
     };
 
-    // 意味を表示する関数
     const revealMeaning = () => {
         setShowMeaning(true);
     };
 
-    // 信頼度スライダーの変更を処理する関数
     const handleConfidenceChange = (e) => {
-        // 明示的に数値に変換して状態を更新
         const newValue = parseFloat(e.target.value);
         setConfidence(newValue);
     };
 
-    // 次の単語に進む関数
+    const evaluateLearning = (confidence) => {
+        const grade = Math.min(5, Math.max(1, Math.ceil(confidence * 5)));
+        return {
+            correct: grade >= 3,
+            confidence: grade / 5
+        };
+    };
+
     const handleNext = async () => {
         try {
             const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:3001';
             const currentWord = words[currentIndex];
 
-            // 学習結果をサーバーに送信
-            await axios.post(`${apiUrl}/api/study/${currentWord.id}`, {
-                confidence: confidence
-            });
+            const { correct, confidence: normalizedConfidence } = evaluateLearning(confidence);
 
-            // 次の単語に進む
+            const updateResponse = await axios.post(
+                `${apiUrl}/api/words/${currentWord.id}/update`,
+                {
+                    correct,
+                    confidence: normalizedConfidence
+                }
+            );
+
+            // バックエンドから返されるnextReviewDateが数値形式であることを確認
+            let nextReviewTimestamp = Number(updateResponse.data.word.nextReviewDate);
+
+            // 有効なタイムスタンプか確認
+            if (isNaN(nextReviewTimestamp) || nextReviewTimestamp <= 0) {
+                throw new Error('無効な次回復習日時です');
+            }
+
+            // 現在時刻を取得
+            const now = Date.now();
+
+            // 次回復習日時の計算
+            let formattedDate;
+            const nextReviewDateObj = new Date(nextReviewTimestamp);
+
+            // 初回学習時と2回目学習時は常に5分後と表示
+            if (updateResponse.data.word.totalReviews === 1 ||
+                updateResponse.data.word.totalReviews === 2) {
+                formattedDate = '5分後';
+                nextReviewDateObj.setTime(now + 5 * 60 * 1000);
+                nextReviewTimestamp = now + 5 * 60 * 1000;
+            }
+            // 5分以内の場合は「5分後」と表示
+            else if (nextReviewTimestamp - now <= 5 * 60 * 1000) {
+                formattedDate = '5分後';
+            }
+            // 1時間以内の場合は「X分後」と表示
+            else if (nextReviewTimestamp - now <= 60 * 60 * 1000) {
+                const minutes = Math.round((nextReviewTimestamp - now) / (60 * 1000));
+                formattedDate = `${minutes}分後`;
+            }
+            // 24時間以内の場合は「X時間後」と表示
+            else if (nextReviewTimestamp - now <= 24 * 60 * 60 * 1000) {
+                const hours = Math.round((nextReviewTimestamp - now) / (60 * 60 * 1000));
+                formattedDate = `${hours}時間後`;
+            }
+            // それ以外の場合は日時を表示
+            else {
+                formattedDate = nextReviewDateObj.toLocaleString('ja-JP', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: false
+                });
+            }
+
+            // 記憶保持率の計算
+            const retention = Number(updateResponse.data.word.retentionRate);
+            const retentionPercentage = isNaN(retention) ? 0 : (retention * 100);
+            const rate = Math.max(0, Math.min(100, retentionPercentage));
+            setRetentionRate(rate);
+
             if (currentIndex < words.length - 1) {
                 setCurrentIndex(currentIndex + 1);
                 setShowMeaning(false);
-                setConfidence(0.5); // 信頼度をリセット
+                setConfidence(0.5);
+                setNextReviewInfo(`次回の復習: ${formattedDate}`);
             } else {
                 setStudyComplete(true);
-                // 次回の復習情報を取得
                 const statsRes = await axios.get(`${apiUrl}/api/stats`);
-                setNextReviewInfo(`次回の復習: ${statsRes.data.reviewsDue}単語`);
+                setNextReviewInfo(
+                    `次回の復習: ${statsRes.data.reviewsDue}単語 (次回提示: ${formattedDate})`
+                );
             }
         } catch (error) {
             console.error("学習結果の送信に失敗しました", error);
-            setError("学習結果の送信に失敗しました。");
+            if (error.response) {
+                setError(`学習結果の送信に失敗しました: ${error.response.data.error}`);
+            } else {
+                setError("学習結果の送信に失敗しました。ネットワーク接続を確認してください。");
+            }
         }
     };
 
-    // 単語の発音を読み上げる関数
     const speakWord = (word) => {
         if ('speechSynthesis' in window) {
             const utterance = new SpeechSynthesisUtterance(word);
-            utterance.lang = 'en-US'; // 英語の発音に設定
+            utterance.lang = 'en-US';
             speechSynthesis.speak(utterance);
         }
     };
 
-    // ローディング中の表示
     if (loading) {
         return (
             <div className="quiz-container">
@@ -96,7 +160,6 @@ const Quiz = () => {
         );
     }
 
-    // エラー表示
     if (error) {
         return (
             <div className="quiz-container">
@@ -106,7 +169,6 @@ const Quiz = () => {
         );
     }
 
-    // 学習する単語がない場合
     if (words.length === 0) {
         return (
             <div className="quiz-container">
@@ -118,13 +180,13 @@ const Quiz = () => {
         );
     }
 
-    // 学習完了時の表示
     if (studyComplete) {
         return (
             <div className="quiz-container">
                 <h2>学習完了！</h2>
                 <p>今日の学習は終了しました。</p>
                 {nextReviewInfo && <p>{nextReviewInfo}</p>}
+                <p>記憶保持率: {typeof retentionRate === 'number' ? retentionRate.toFixed(1) : '0.0'}%</p>
                 <button className="button" onClick={fetchWords}>もう一度学習する</button>
             </div>
         );
@@ -171,8 +233,6 @@ const Quiz = () => {
                                     value={confidence}
                                     onChange={handleConfidenceChange}
                                     className="confidence-slider"
-                                    onTouchEnd={handleConfidenceChange} // タッチ操作のサポート追加
-                                    onTouchMove={handleConfidenceChange} // タッチ操作のサポート追加
                                 />
                                 <span className="confidence-max">完全に自信あり</span>
                             </div>
