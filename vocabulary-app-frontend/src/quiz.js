@@ -68,43 +68,33 @@ const Quiz = () => {
                 }
             );
 
-            // バックエンドから返されるnextReviewDateが数値形式であることを確認
             let nextReviewTimestamp = Number(updateResponse.data.word.nextReviewDate);
 
-            // 有効なタイムスタンプか確認
             if (isNaN(nextReviewTimestamp) || nextReviewTimestamp <= 0) {
                 throw new Error('無効な次回復習日時です');
             }
 
-            // 現在時刻を取得
             const now = Date.now();
-
-            // 次回復習日時の計算
             let formattedDate;
             const nextReviewDateObj = new Date(nextReviewTimestamp);
 
-            // 初回学習時と2回目学習時は常に5分後と表示
             if (updateResponse.data.word.totalReviews === 1 ||
                 updateResponse.data.word.totalReviews === 2) {
                 formattedDate = '5分後';
                 nextReviewDateObj.setTime(now + 5 * 60 * 1000);
                 nextReviewTimestamp = now + 5 * 60 * 1000;
             }
-            // 5分以内の場合は「5分後」と表示
             else if (nextReviewTimestamp - now <= 5 * 60 * 1000) {
                 formattedDate = '5分後';
             }
-            // 1時間以内の場合は「X分後」と表示
             else if (nextReviewTimestamp - now <= 60 * 60 * 1000) {
                 const minutes = Math.round((nextReviewTimestamp - now) / (60 * 1000));
                 formattedDate = `${minutes}分後`;
             }
-            // 24時間以内の場合は「X時間後」と表示
             else if (nextReviewTimestamp - now <= 24 * 60 * 60 * 1000) {
                 const hours = Math.round((nextReviewTimestamp - now) / (60 * 60 * 1000));
                 formattedDate = `${hours}時間後`;
             }
-            // それ以外の場合は日時を表示
             else {
                 formattedDate = nextReviewDateObj.toLocaleString('ja-JP', {
                     year: 'numeric',
@@ -116,7 +106,6 @@ const Quiz = () => {
                 });
             }
 
-            // 記憶保持率の計算
             const retention = Number(updateResponse.data.word.retentionRate);
             const retentionPercentage = isNaN(retention) ? 0 : (retention * 100);
             const rate = Math.max(0, Math.min(100, retentionPercentage));
@@ -211,9 +200,14 @@ const Quiz = () => {
                         <span role="img" aria-label="スピーカー">🔊</span>
                     </button>
                 </div>
-                <p className="review-count">
-                    学習回数: {currentWord.totalReviews || 0}回目
-                </p>
+                <div className="word-stats">
+                    <p className="review-count">
+                        学習回数: {currentWord.totalReviews || 0}回目
+                    </p>
+                    <p className="word-level">
+                        レベル: {currentWord.level || 1}
+                    </p>
+                </div>
 
                 {showMeaning ? (
                     <>

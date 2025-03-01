@@ -1,3 +1,63 @@
+.quiz-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+.word-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin: 20px;
+    max-width: 500px;
+    width: 90%;
+}
+
+.word-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.word-text {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+.speak-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.word-stats {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0;
+    font-size: 0.9rem;
+    color: var(--review-count-color);
+}
+
+.word-level {
+    font-weight: bold;
+    color: #1dd1a1;
+}
+
+.review-count {
+    color: var(--review-count-color);
+}
+
+.meaning-text {
+    font-size: 1.2rem;
+    color: var(--meaning-text-color);
+    margin: 20px 0;
+}
+
 .confidence-container {
     margin: 20px 0;
     text-align: center;
@@ -63,141 +123,53 @@
     color: var(--button-primary);
 }
 
-.completion-message {
-    font-size: 18px;
-    color: var(--text-color);
-    text-align: center;
-    margin: 20px 0;
-}
-
-.next-review-info {
-    font-size: 16px;
-    color: var(--meaning-text-color);
-    text-align: center;
-    margin-bottom: 30px;
-}
-
-.button.refresh {
+.button {
     background-color: var(--button-primary);
-    display: block;
-    margin: 0 auto;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin: 10px;
 }
 
-/* スライダーのモバイル対応強化 */
+.button:hover {
+    background-color: var(--button-primary-hover);
+}
+
+.loading-text {
+    font-size: 1.2rem;
+    color: var(--text-color);
+}
+
+.error-message {
+    color: #ff6b6b;
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+}
+
 @media (max-width: 768px) {
-    .confidence-container {
-        margin: 15px 0;
+    .word-card {
+        padding: 15px;
+        margin: 15px;
     }
 
-    .confidence-label {
-        font-size: 0.9rem;
-        margin-bottom: 8px;
-    }
-
-    .confidence-slider-container {
-        padding: 0 5px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .confidence-slider {
-        height: 12px;
-        flex: 1;
-        -webkit-appearance: none;
-        appearance: none;
-        background: linear-gradient(to right, #ff6b6b, #feca57, #1dd1a1);
-        border-radius: 10px;
-        outline: none;
-        margin: 0 10px;
-    }
-
-    .confidence-slider::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        appearance: none;
-        width: 28px;
-        height: 28px;
-        background: var(--button-primary);
-        border-radius: 50%;
-        cursor: pointer;
-        border: 2px solid white;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    }
-
-    .confidence-slider::-moz-range-thumb {
-        width: 28px;
-        height: 28px;
-        background: var(--button-primary);
-        border-radius: 50%;
-        cursor: pointer;
-        border: 2px solid white;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    }
-
-    .confidence-min,
-    .confidence-max {
-        font-size: 0.8rem;
-        white-space: nowrap;
-        width: auto;
-        max-width: 70px;
-    }
-
-    .confidence-value {
+    .word-text {
         font-size: 1.3rem;
-        margin-top: 12px;
-        font-weight: bold;
-    }
-}
-
-/* さらに小さい画面向け */
-@media (max-width: 480px) {
-    .quiz-container {
-        padding: 12px;
     }
 
-    .word-display {
-        font-size: 1.4rem;
-        margin: 15px 0;
+    .meaning-text {
+        font-size: 1rem;
     }
 
-    .meaning-display {
-        font-size: 1.1rem;
-        margin-bottom: 15px;
+    .confidence-slider-container span {
+        font-size: 0.8rem;
     }
 
     .button {
-        padding: 10px 15px;
+        padding: 8px 16px;
         font-size: 0.9rem;
     }
-
-    .confidence-slider-container {
-        margin: 10px 0;
-    }
-
-    /* スライダーのラベルを縮小 */
-    .confidence-min,
-    .confidence-max {
-        font-size: 0.7rem;
-        max-width: 60px;
-    }
-
-    /* スライダーのつまみを大きく */
-    .confidence-slider::-webkit-slider-thumb {
-        width: 30px;
-        height: 30px;
-    }
-
-    .confidence-slider::-moz-range-thumb {
-        width: 30px;
-        height: 30px;
-    }
-}
-
-/* 既存のスタイルに追加 */
-
-/* スライダーのラベルを明確に */
-.confidence-min,
-.confidence-max {
-    font-size: 0.9rem;
-    color: var(--text-color);
 }
