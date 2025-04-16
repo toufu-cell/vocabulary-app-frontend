@@ -15,7 +15,7 @@ const Navbar = ({ activeTab, setActiveTab, darkMode, toggleDarkMode }) => {
                 <div className="logo">単語学習</div>
 
                 <div className="navbar-controls">
-                    {/* ハンバーガーメニューボタン */}
+                    {/* メニューボタン */}
                     <div
                         className={`menu-toggle ${menuOpen ? 'active' : ''}`}
                         onClick={() => setMenuOpen(!menuOpen)}
